@@ -3,11 +3,11 @@ name: Release Package
 
 on:
   workflow_dispatch:
-  pull_request:
-    types:
-      - closed
-    branches: # target branch
-      - master
+#  pull_request:
+#    types:
+#      - closed
+#    branches: # target branch
+#      - master
 
 permissions:
   pull-requests: write
