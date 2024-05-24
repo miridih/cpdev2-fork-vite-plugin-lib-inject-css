@@ -1,9 +1,8 @@
 {
-  "name": "vite-plugin-lib-inject-css",
+  "name": "cpdev2-fork-vite-plugin-lib-inject-css",
   "version": "2.1.1",
   "type": "module",
   "description": "Inject css at the top of chunk file in lib mode using `import` statement, support multiple entries.",
-  "author": "秦旭洋 <emosheep@qq.com>",
   "packageManager": "pnpm@9.1.1",
   "license": "MIT",
   "main": "./dist/index.cjs",
@@ -65,7 +64,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/emosheeep/vite-plugin-lib-inject-css"
+    "url": "https://github.com/miridih/cpdev2-fork-vite-plugin-lib-inject-css"
   },
   "keywords": [
     "vite",
