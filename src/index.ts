@@ -18,12 +18,15 @@ const createPreserveModulesWarning = (optionPath: string) =>
 /**
  * Inject css at the top of each generated chunk file, only works with library mode.
  * @param base DOC 타입시 base 경로를 지정할 수 있습니다. default: '/'
- * @param injectionType 'IMPORT' | 'DOC'. default: 'IMPORT'
+ * @param injectionType 'IMPORT' | 'APPEND_LINK'. default: 'IMPORT'
  */
 export function libInjectCss({
   base = '/',
   injectionType = 'IMPORT',
-}: { base?: string; injectionType?: 'IMPORT' | 'DOC' } = {}): Plugin {
+}: {
+  base?: string;
+  injectionType?: 'IMPORT' | 'APPEND_LINK';
+} = {}): Plugin {
   let skipInject = false;
 
   let resolvedConfig: ResolvedConfig;
@@ -139,13 +142,13 @@ export function libInjectCss({
             : `./${cssFilePath}`;
 
           const injection =
-            injectionType === 'DOC'
+            injectionType === 'APPEND_LINK'
               ? createStyleSheet(base + cssFileName)
               : format === 'es'
                 ? `import '${cssFilePath}';`
                 : `require('${cssFilePath}');`;
 
-          if (injectionType === 'DOC') {
+          if (injectionType === 'APPEND_LINK') {
             code = injection + code;
           } else {
             code = code.slice(0, position) + injection + code.slice(position);
@@ -164,4 +167,4 @@ export function libInjectCss({
 }
 
 const createStyleSheet = (src: string) =>
-  `(()=>{if(typeof window==='undefined')return;const linkTag=document.createElement('link');linkTag.rel='stylesheet';linkTag.type='text/css';linkTag.href='${src}';document.head.appendChild(linkTag);})();\n`;
+  `(()=>{if(typeof window==='undefined')return;const l=document.createElement('link');l.rel='stylesheet';l.type='text/css';l.href='${src}';document.head.appendChild(l);})();\n`;

@@ -124,8 +124,8 @@ ${import_picocolors.default.cyan(`[${pluginName}]`)} ${import_picocolors.default
         for (const cssFileName of chunk.viteMetadata.importedCss) {
           let cssFilePath = import_path.default.relative(import_path.default.dirname(chunk.fileName), cssFileName).replaceAll(/[\\/]+/g, "/");
           cssFilePath = cssFilePath.startsWith(".") ? cssFilePath : `./${cssFilePath}`;
-          const injection = injectionType === "DOC" ? createStyleSheet(base + cssFileName) : format === "es" ? `import '${cssFilePath}';` : `require('${cssFilePath}');`;
-          if (injectionType === "DOC") {
+          const injection = injectionType === "APPEND_LINK" ? createStyleSheet(base + cssFileName) : format === "es" ? `import '${cssFilePath}';` : `require('${cssFilePath}');`;
+          if (injectionType === "APPEND_LINK") {
             code = injection + code;
           } else {
             code = code.slice(0, position) + injection + code.slice(position);
@@ -140,7 +140,7 @@ ${import_picocolors.default.cyan(`[${pluginName}]`)} ${import_picocolors.default
     }
   };
 }
-var createStyleSheet = (src) => `(()=>{if(typeof window==='undefined')return;const linkTag=document.createElement('link');linkTag.rel='stylesheet';linkTag.type='text/css';linkTag.href='${src}';document.head.appendChild(linkTag);})();
+var createStyleSheet = (src) => `(()=>{if(typeof window==='undefined')return;const l=document.createElement('link');l.rel='stylesheet';l.type='text/css';l.href='${src}';document.head.appendChild(l);})();
 `;
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
