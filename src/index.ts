@@ -17,9 +17,13 @@ const createPreserveModulesWarning = (optionPath: string) =>
 
 /**
  * Inject css at the top of each generated chunk file, only works with library mode.
- * @param libOptions Optional libOptions which will overwrite the relevant options.
+ * @param base DOC 타입시 base 경로를 지정할 수 있습니다. default: '/'
+ * @param injectionType 'IMPORT' | 'DOC'. default: 'IMPORT'
  */
-export function libInjectCss(): Plugin {
+export function libInjectCss({
+  base = '/',
+  injectionType = 'IMPORT',
+}: { base?: string; injectionType?: 'IMPORT' | 'DOC' } = {}): Plugin {
   let skipInject = false;
 
   let resolvedConfig: ResolvedConfig;
@@ -135,11 +139,17 @@ export function libInjectCss(): Plugin {
             : `./${cssFilePath}`;
 
           const injection =
-            format === 'es'
-              ? `import '${cssFilePath}';`
-              : `require('${cssFilePath}');`;
+            injectionType === 'DOC'
+              ? createStyleSheet(base + cssFileName)
+              : format === 'es'
+                ? `import '${cssFilePath}';`
+                : `require('${cssFilePath}');`;
 
-          code = code.slice(0, position) + injection + code.slice(position);
+          if (injectionType === 'DOC') {
+            code = injection + code;
+          } else {
+            code = code.slice(0, position) + injection + code.slice(position);
+          }
         }
 
         // update code and sourcemap
@@ -152,3 +162,6 @@ export function libInjectCss(): Plugin {
     },
   };
 }
+
+const createStyleSheet = (src: string) =>
+  `(()=>{if(typeof window==='undefined')return;const linkTag=document.createElement('link');linkTag.rel='stylesheet';linkTag.type='text/css';linkTag.href='${src}';document.head.appendChild(linkTag);})();\n`;
